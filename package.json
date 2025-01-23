@@ -2,6 +2,9 @@
   "name": "backend",
   "module": "index.js",
   "type": "module",
+  "scripts": {
+    "dev": "odemon bun src/index.js"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -9,6 +12,9 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.5"
   }
 }

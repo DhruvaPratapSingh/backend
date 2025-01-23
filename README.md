@@ -1,15 +1,7 @@
-# backend
+this is video series on backend with js
+---
 
-To install dependencies:
+## 🔗 Model Link
+Access the workspace and additional resources [click here](https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj).
 
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run index.js
-```
-
-This project was created using `bun init` in bun v1.1.45. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+---
