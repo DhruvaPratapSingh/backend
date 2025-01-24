@@ -51,6 +51,8 @@ const userSchema = new Schema(
 );
 userSchema.pre("save",async function (next){
     if(!this.isModified("password"))return next();
+    // if u are not use if case then it update a hash password at change of any field if 
+    // u want to change hash only if passord reset or new login then use if case
    this.password=await bcrypt.hash(this.password,10);
    next()
 })
