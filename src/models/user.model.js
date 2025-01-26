@@ -49,17 +49,34 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
-userSchema.pre("save",async function (next){
-    if(!this.isModified("password"))return next();
-    // if u are not use if case then it update a hash password at change of any field if 
-    // u want to change hash only if passord reset or new login then use if case
-   this.password=await bcrypt.hash(this.password,10);
-   next()
-})
+// userSchema.pre("save",async function (next){
+//     if(!this.isModified("password"))return next();
+//     // if u are not use if case then it update a hash password at change of any field if 
+//     // u want to change hash only if passord reset or new login then use if case
+//    this.password=await bcrypt.hash(this.password,10);
+//    next()
+// })
 
-userSchema.methods.isPasswordCorrect=async function(password){
-    return await bcrypt.compare(password,this.password)
-}
+// userSchema.methods.isPasswordCorrect = async function (password) {
+//   return await bcrypt.compare(password, this.password);
+// };
+userSchema.pre("save", async function (next) {
+  try {
+    // Only hash the password if it's modified or new
+    if (!this.isModified("password")) return next();
+
+    // Hash the password with a salt factor of 10
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Method to compare plain text password with hashed password
+userSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 userSchema.methods.generateAccessToken=function(){
     return jwt.sign(
         {
