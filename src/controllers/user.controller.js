@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponce.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt"
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -216,7 +217,26 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Password changed successfully"));
 });
-
+const resetPassword = asyncHandler(async (req, res) => {
+  const { newPassword, confirmnewPassword } = req.body;
+  if (newPassword !== confirmnewPassword) {
+    throw new ApiError(400, "New password and confirm password don't match");
+  }
+  // console.log("req.user:", req.user);
+  if (!req.user?._id) {
+    throw new ApiError(401, "User not authenticated");
+  }
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  await user.save();
+  return res.status(200).json(
+    new ApiResponse(200, user, "Password reset successfully")
+  );
+});
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
@@ -438,4 +458,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  resetPassword
 };
